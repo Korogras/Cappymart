@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-//function that renders the products section and has the html and css
-const Products = ({ products = [] }) => {
+import { Link } from 'react-router-dom'
+
+const ProductCard = ({ products = [] }) => {
   const [expandedStates, setExpandedStates] = useState(
     Array(products.length).fill(false)
   );
@@ -18,7 +19,7 @@ const Products = ({ products = [] }) => {
           {products.map((product, index) => {
             const { id, title, price, description, category, image } = product;
             return (
-              <div
+              <Link to={`/products/${id}`}
                 className="lg:w-1/4 md:w-1/2 p-2 w-full shadow-sm m-2"
                 key={id}
               >
@@ -41,6 +42,7 @@ const Products = ({ products = [] }) => {
                       <p className="mt-1 text-md font-semibold">
                         {description}
                       </p>
+                      {/* Step 1: Add "Show Less" button */}
                       <button
                         onClick={() => toggleExpanded(index)}
                         className="text-blue-500 hover:underline focus:outline-none"
@@ -66,7 +68,7 @@ const Products = ({ products = [] }) => {
                   )}
                   <p className="mt-1 text-md font-semibold">${price}</p>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -75,4 +77,4 @@ const Products = ({ products = [] }) => {
   );
 };
 
-export default Products;
+export default ProductCard;
