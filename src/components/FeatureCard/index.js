@@ -41,7 +41,7 @@ const FeatureCard = ({ cards = [1, 2, 3] }) => {
                     {card.description}
                   </p>
                   <a className="mt-3 text-indigo-500 inline-flex items-center">
-                    Learn More
+                    
                     <svg
                       fill="none"
                       stroke="currentColor"

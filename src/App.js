@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import Product from "./modules/Product";
 import Products from "./modules/Products";
 import CategoryProducts from "./modules/CategoryProducts";
+import Cart from "./modules/Cart";
 //function that renders Header and Home compnent to the App
 function App() {
   return (
@@ -16,8 +17,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products/:id" element={<Product />} />
         <Route path="/products" element={<Products />} />
-        <Route path="*" element={<div>404</div>} />
         <Route path='/categories/:name' element={<CategoryProducts/>} />
+        <Route path='cart' element={<Cart/>}/>
+        <Route path="*" element={<div>404</div>} />
       </Routes>
       <Footer />
     </div>
