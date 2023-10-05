@@ -1,10 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Cart = () => {
-  const cart = JSON.parse(localStorage.getItem('cart')) || []
+  const navigate = useNavigate()
+  const carts = JSON.parse(localStorage.getItem('cart')) || []
 
-if (!cart.length) <div>Cart is Empty</div>
+const handleInc = (id) => {
+  const updatedCart = carts.map(item => {
+    if(item.id === id) {
+      return {
+        ...item,
+        quantity: item.quantity + 1
+      }
+    }
+    return item
+  })
+  localStorage.setItem('cart', JSON.stringify(updatedCart))
+  navigate('/cart')
+}
+
+const handleDec = (id) => {
+  const updatedCart = carts.map(item => {
+    if(item.id === id) {
+      return {
+        ...item,
+        quantity: item.quantity - 1 
+      }
+    }
+    return item
+  })
+  localStorage.setItem('cart', JSON.stringify(updatedCart))
+navigate('/cart')
+}
+
+const removeProduct = (id) => {
+  const updatedCart = carts.filter(item => item.id !== id)
+  localStorage.setItem('cart', JSON.stringify(updatedCart))
+}
+
+if (!carts.length) <div>Cart is Empty</div>
 
   return (
     <div className="container mx-auto mt-10">
@@ -12,7 +46,7 @@ if (!cart.length) <div>Cart is Empty</div>
         <div className="w-3/4 bg-white px-10 py-10">
           <div className="flex justify-between border-b pb-8">
             <h1 className="font-semibold text-2xl">Shopping Cart</h1>
-            <h2 className="font-semibold text-2xl">{cart?.length} Items</h2>
+            <h2 className="font-semibold text-2xl">{carts?.length} Items</h2>
           </div>
           <div className="flex mt-10 mb-5">
             <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
@@ -29,7 +63,7 @@ if (!cart.length) <div>Cart is Empty</div>
             </h3>
           </div>
           {
-            cart?.map(cart => {
+            carts?.map(cart => {
               return (
                 <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
             <div className="flex w-2/5">
@@ -45,24 +79,25 @@ if (!cart.length) <div>Cart is Empty</div>
                 <span className="text-red-500 text-xs">{cart?.category}</span>
                 <div
                   
-                  className="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                  className="font-semibold hover:text-red-500 text-gray-500 text-xs cursor-pointer" onClick={() => 
+                  removeProduct(cart.id)}
                 >
                   Remove
                 </div>
               </div>
             </div>
             <div className="flex justify-center w-1/5">
-              <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+              <svg className="fill-current text-gray-600 w-3 cursor-pointer" onClick={() =>  handleDec(cart?.id)} viewBox="0 0 448 512">
                 <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
 
               <input
                 className="mx-2 border text-center w-8"
                 type="text"
-                value="1"
+                value={cart?.quantity}
               />
 
-              <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+              <svg className="fill-current text-gray-600 w-3 cursor-pointer" onClick={() =>  handleInc(cart?.id)} viewBox="0 0 448 512">
                 <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
             </div>
@@ -88,7 +123,7 @@ if (!cart.length) <div>Cart is Empty</div>
         <div id="summary" className="w-1/4 px-8 py-10">
           <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
           <div className="flex justify-between mt-10 mb-5">
-            <span className="font-semibold text-sm uppercase">Items 3</span>
+            <span className="font-semibold text-sm uppercase">Items {carts?.length}</span>
             <span className="font-semibold text-sm">590$</span>
           </div>
           <div>
