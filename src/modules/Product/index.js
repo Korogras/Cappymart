@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 // function to render product page with html and css
-const Product = () => {
+const Product = ({token, setToken}) => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const navigate = useNavigate();
@@ -196,10 +196,18 @@ navigate('/cart');
                 ${product?.price}
               </span>
               <div className="flex justify-between items-center ml-5">
-                <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:border-indigo-600 rounded mr-2" onClick={() => handleCart(product, true)}>
+                <button 
+                
+                className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:border-indigo-600 rounded mr-2" 
+                //makes disabled if there is no login token
+                disabled= {token ? false: true} 
+                onClick={() => handleCart(product, true)}>
                   Buy it now
                 </button>
-                <button className="flex ml-auto border border-indigo-500 py-2 px-6 focus:outline-none hover:border-indigo-600 hover:text-white rounded ml-2" onClick={() => handleCart(product)}>
+                <button 
+                disabled= {token ? false: true} 
+                className="flex ml-auto border border-indigo-500 py-2 px-6 focus:outline-none hover:border-indigo-600 hover:text-white rounded ml-2" 
+                onClick={() => handleCart(product)}>
                   Add to Cart
                 </button>
               </div>

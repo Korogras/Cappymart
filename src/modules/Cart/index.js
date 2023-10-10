@@ -1,44 +1,60 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Cart = () => {
-  const navigate = useNavigate()
-  const carts = JSON.parse(localStorage.getItem('cart')) || []
+  const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
+  const carts = JSON.parse(localStorage.getItem("cart")) || [];
+  //useEffect function that makes a variable that calculates total by multiplying item price by quanitity
+  useEffect(() => {
+    const total = carts.reduce((acc, item) => {
+      return acc + item.price * item.quantity;
+    }, 0);
+    setTotal(total);
+  }, [carts]);
 
-const handleInc = (id) => {
-  const updatedCart = carts.map(item => {
-    if(item.id === id) {
-      return {
-        ...item,
-        quantity: item.quantity + 1
+  const handleInc = (id) => {
+    const updatedCart = carts.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity: item.quantity + 1,
+        };
       }
-    }
-    return item
-  })
-  localStorage.setItem('cart', JSON.stringify(updatedCart))
-  navigate('/cart')
-}
+      return item;
+    });
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
+  };
 
-const handleDec = (id) => {
-  const updatedCart = carts.map(item => {
-    if(item.id === id) {
-      return {
-        ...item,
-        quantity: item.quantity - 1 
+  const handleDec = (id) => {
+    const updatedCart = carts.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        };
       }
-    }
-    return item
-  })
-  localStorage.setItem('cart', JSON.stringify(updatedCart))
-navigate('/cart')
-}
+      return item;
+    });
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
+  };
 
-const removeProduct = (id) => {
-  const updatedCart = carts.filter(item => item.id !== id)
-  localStorage.setItem('cart', JSON.stringify(updatedCart))
-}
+  const removeProduct = (id) => {
+    const updatedCart = carts.filter((item) => item.id !== id);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
+  };
 
-if (!carts.length) <div>Cart is Empty</div>
+  if (carts.length === 0) {
+    return (
+      <div className="h-[55vh] flex justify-center items-center text-4xl">
+        Cart is empty.
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto mt-10">
@@ -62,54 +78,63 @@ if (!carts.length) <div>Cart is Empty</div>
               Total
             </h3>
           </div>
-          {
-            carts?.map(cart => {
-              return (
-                <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
-            <div className="flex w-2/5">
-              <div className="w-20">
-                <img
-                  className="h-24"
-                  src={cart?.image}
-                  alt={cart?.title}
-                />
-              </div>
-              <div className="flex flex-col justify-between ml-4 flex-grow">
-                <span className="font-bold text-sm">{cart?.title}</span>
-                <span className="text-red-500 text-xs">{cart?.category}</span>
-                <div
-                  
-                  className="font-semibold hover:text-red-500 text-gray-500 text-xs cursor-pointer" onClick={() => 
-                  removeProduct(cart.id)}
-                >
-                  Remove
+          {carts?.map((cart) => {
+            return (
+              <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
+                <div className="flex w-2/5">
+                  <div className="w-20">
+                    <img className="h-24" src={cart?.image} alt={cart?.title} />
+                  </div>
+                  <div className="flex flex-col justify-between ml-4 flex-grow">
+                    <span className="font-bold text-sm">{cart?.title}</span>
+                    <span className="text-red-500 text-xs">
+                      {cart?.category}
+                    </span>
+                    <div
+                      className="font-semibold hover:text-red-500 text-gray-500 text-xs cursor-pointer"
+                      onClick={() => removeProduct(cart.id)}
+                    >
+                      Remove
+                    </div>
+                  </div>
                 </div>
+                <div className="flex justify-center w-1/5">
+                  <svg
+                    className="fill-current text-gray-600 w-3 cursor-pointer"
+                    onClick={() => handleDec(cart?.id)}
+                    viewBox="0 0 448 512"
+                  >
+                    <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                  </svg>
+
+                  <input
+                    className="mx-2 border text-center w-8"
+                    type="text"
+                    value={cart?.quantity}
+                  />
+
+                  <svg
+                    className="fill-current text-gray-600 w-3 cursor-pointer"
+                    onClick={() => handleInc(cart?.id)}
+                    viewBox="0 0 448 512"
+                  >
+                    <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                  </svg>
+                </div>
+                <span className="text-center w-1/5 font-semibold text-sm">
+                  ${cart?.price}
+                </span>
+                <span className="text-center w-1/5 font-semibold text-sm capitalize">
+                  ${cart?.price * cart?.quantity}
+                </span>
               </div>
-            </div>
-            <div className="flex justify-center w-1/5">
-              <svg className="fill-current text-gray-600 w-3 cursor-pointer" onClick={() =>  handleDec(cart?.id)} viewBox="0 0 448 512">
-                <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-              </svg>
+            );
+          })}
 
-              <input
-                className="mx-2 border text-center w-8"
-                type="text"
-                value={cart?.quantity}
-              />
-
-              <svg className="fill-current text-gray-600 w-3 cursor-pointer" onClick={() =>  handleInc(cart?.id)} viewBox="0 0 448 512">
-                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-              </svg>
-            </div>
-            <span className="text-center w-1/5 font-semibold text-sm">${cart?.price}</span>
-            <span className="text-center w-1/5 font-semibold text-sm capitalize">${cart?.price * cart?.quantity}</span>
-          </div>
-              )
-            })
-          }
-          
-
-          <Link to='/products' className="flex font-semibold text-indigo-600 text-sm mt-10">
+          <Link
+            to="/products"
+            className="flex font-semibold text-indigo-600 text-sm mt-10"
+          >
             <svg
               className="fill-current mr-2 text-indigo-600 w-4"
               viewBox="0 0 448 512"
@@ -121,10 +146,14 @@ if (!carts.length) <div>Cart is Empty</div>
         </div>
 
         <div id="summary" className="w-1/4 px-8 py-10">
-          <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
+          <h1 className="font-semibold text-2xl border-b pb-8">
+            Order Summary
+          </h1>
           <div className="flex justify-between mt-10 mb-5">
-            <span className="font-semibold text-sm uppercase">Items {carts?.length}</span>
-            <span className="font-semibold text-sm">590$</span>
+            <span className="font-semibold text-sm uppercase">
+              Items {carts?.length}
+            </span>
+            <span className="font-semibold text-sm">${total?.toFixed(2)}</span>
           </div>
           <div>
             <label className="font-medium inline-block mb-3 text-sm uppercase">
@@ -154,7 +183,7 @@ if (!carts.length) <div>Cart is Empty</div>
           <div className="border-t mt-8">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Total cost</span>
-              <span>$600</span>
+              <span>${(total + 10).toFixed(2)}</span>
             </div>
             <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
               Checkout

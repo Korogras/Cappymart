@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ products = [] }) => {
   const [expandedStates, setExpandedStates] = useState(
@@ -19,7 +19,8 @@ const ProductCard = ({ products = [] }) => {
           {products.map((product, index) => {
             const { id, title, price, description, category, image } = product;
             return (
-              <Link to={`/products/${id}`}
+              <Link
+                to={`/products/${id}`}
                 className="lg:w-1/4 md:w-1/2 p-2 w-full shadow-sm m-2"
                 key={id}
               >
@@ -42,7 +43,7 @@ const ProductCard = ({ products = [] }) => {
                       <p className="mt-1 text-md font-semibold">
                         {description}
                       </p>
-                      {/* Step 1: Add "Show Less" button */}
+                      {/* Step 2: Add "Show Less" button */}
                       <button
                         onClick={() => toggleExpanded(index)}
                         className="text-blue-500 hover:underline focus:outline-none"
@@ -56,6 +57,7 @@ const ProductCard = ({ products = [] }) => {
                       {description.length > 100 && (
                         <>
                           <span>...</span>{" "}
+                          {/* Step 3: Add "Show More" button */}
                           <button
                             onClick={() => toggleExpanded(index)}
                             className="text-blue-500 hover:underline focus:outline-none"
